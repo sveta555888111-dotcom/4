@@ -1,0 +1,253 @@
+ПЗ 5 Черноволенко Светлана ДЭ 22-25
+
+Задача № 1
+Дано число N (> 0) и набор из N чисел. Создать стек, содержащий исходные числа (последнее число будет вершиной стека). Извлечь из стека все элементы и вывести их значения. Вывести также количество извлеченных элементов N.
+Стек необходимо реализовать, используя:
+a.	Встроенный список (list)
+b.	Класс collections.deque
+c.	Класс queue.LifoQueue
+
+Встроенный список:
+N = int(input())
+stack = []
+for _ in range(N):
+    x = int(input())
+    stack.append(x)
+
+count = 0
+while stack:
+    print(stack.pop())
+    count += 1
+print(count)
+
+# collections.deque
+from collections import deque
+N = int(input())
+stack = deque()
+for _ in range(N):
+    x = int(input())
+    stack.append(x)
+
+count = 0
+while stack:
+    print(stack.pop())
+    count += 1
+print(count)
+
+# queue.LifoQueue
+from queue import LifoQueue
+N = int(input())
+stack = LifoQueue()
+for _ in range(N):
+    x = int(input())
+    stack.put(x)
+
+count = 0
+while not stack.empty():
+    print(stack.get())
+    count += 1
+print(count)
+
+
+
+Задача № 2
+Даны два непустых стека. Переместить все элементы из первого стека во второй (в результате элементы первого стека будут располагаться во втором стеке в порядке, обратном исходному).
+
+from collections import deque
+
+stack1 = deque([1, 2, 3])
+Пример:
+stack2 = deque([4, 5])
+
+while stack1:
+    stack2.append(stack1.pop())
+
+
+
+Задача № 3
+Дан один непустой стек. Создать два новых стека, переместив в первый из них все элементы исходного стека с четными значениями,
+а во второй – с нечетными (элементы в новых стеках будут располагаться в порядке, обратном исходному; один из этих стеков может оказаться пустым).
+Стек необходимо реализовать, используя:
+a.	Класс collections.deque
+b.	Класс queue.LifoQueue
+
+from collections import deque
+from queue import LifoQueue
+
+# collections.deque
+stack = deque([1,2,3,4,5,6])
+even_stack = deque()
+odd_stack = deque()
+
+while stack:
+    x = stack.pop()
+    if x % 2 == 0:
+        even_stack.append(x)
+    else:
+        odd_stack.append(x)
+
+# queue.LifoQueue
+stack = LifoQueue()
+for x in [1,2,3,4,5,6]:
+    stack.put(x)
+
+even_stack = LifoQueue()
+odd_stack = LifoQueue()
+
+while not stack.empty():
+    x = stack.get()
+    if x % 2 == 0:
+        even_stack.put(x)
+    else:
+        odd_stack.put(x)
+
+
+Задача № 4
+Дан набор из N чисел (N > 10). Создать очередь, содержащую данные числа в указанном порядке (первое число будет размещаться в начале очереди, последнее — в конце).
+Извлечь из очереди все элементы и вывести их значения. Вывести также количество извлеченных элементов N.
+Очередь необходимо реализовать, используя:
+c.	Встроенный список (list)
+d.	Класс collections.deque
+e.	Класс queue.Queue
+
+Встроенный список:
+N = int(input())
+queue = []
+for _ in range(N):
+    x = int(input())
+    queue.append(x)
+
+count = 0
+while queue:
+    print(queue.pop(0))
+    count += 1
+print(count)
+
+# collections.deque
+from collections import deque
+N = int(input())
+queue = deque()
+for _ in range(N):
+    x = int(input())
+    queue.append(x)
+
+count = 0
+while queue:
+    print(queue.popleft())
+    count += 1
+print(count)
+
+# queue.Queue
+from queue import Queue
+N = int(input())
+queue = Queue()
+for _ in range(N):
+    x = int(input())
+    queue.put(x)
+
+count = 0
+while not queue.empty():
+    print(queue.get())
+    count +=1
+print(count)
+
+
+
+
+Задача № 5
+Дан набор из 10 чисел. Создать две очереди: первая должна содержать числа из исходного набора с нечетными номерами (индексами), а вторая – с четными; порядок чисел в каждой очереди должен совпадать с порядком чисел в исходном наборе. 
+
+from collections import deque
+
+data = [int(x) for x in input().split()]  # 10 чисел
+q_odd_index = deque()
+q_even_index = deque()
+
+for i, val in enumerate(data):
+    if i % 2 == 0:
+        q_even_index.append(val)
+    else:
+        q_odd_index.append(val)
+
+
+
+Задача № 6
+Дан набор из 10 чисел. Создать две очереди: первая должна содержать все нечетные, а вторая – все четные числа из исходного набора (порядок чисел в каждой очереди должен совпадать с порядком чисел в исходном наборе). 
+
+from collections import deque
+
+data = [int(x) for x in input().split()]  # 10 чисел
+q_odd = deque()
+q_even = deque()
+
+for val in data:
+    if val % 2 == 0:
+        q_even.append(val)
+    else:
+        q_odd.append(val)
+
+
+
+Задача № 7
+Дано число D и очередь, содержащая не менее 10 элементов. Добавить элемент со значением D в конец очереди и извлечь из очереди первый (начальный) элемент. Вывести значение извлеченного элемента.
+
+from collections import deque
+
+D = int(input())
+queue = deque([int(x) for x in input().split()])  # очередь >=10 элементов
+
+queue.append(D)
+removed = queue.popleft()
+print(removed)
+
+
+
+Задача № 8
+Дано число N (> 0) и непустая очередь. Создать функцию для извлечения из очереди N начальных элементов и отображения их значения (если очередь содержит менее N элементов, то извлечь все ее элементы). 
+
+from collections import deque
+
+def extract_n(queue, N):
+    count = 0
+    while queue and count < N:
+        print(queue.popleft())
+        count +=1
+
+N = int(input())
+queue = deque([int(x) for x in input().split()])
+extract_n(queue, N)
+
+
+
+Задача № 9
+Дана непустая очередь. Извлекать из очереди элементы, пока значение начального элемента очереди не станет четным, и выводить значения извлеченных элементов (если очередь не содержит элементов с четными значениями, то извлечь все ее элементы).
+
+from collections import deque
+
+queue = deque([int(x) for x in input().split()])
+
+while queue:
+    if queue[0] % 2 == 0:
+        break
+    print(queue.popleft())
+
+if not queue:  # если очередь пуста (нет четных)
+    # все элементы уже выведены
+    pass
+
+
+
+Задача № 10
+Даны две очереди. Переместить все элементы первой очереди (в порядке от начала к концу) в конец второй очереди.
+
+
+# Задача №10
+from collections import deque
+
+q1 = deque([1,2,3])
+q2 = deque([4,5])
+
+while q1:
+    q2.append(q1.popleft())
+
+
