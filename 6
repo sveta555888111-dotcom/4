@@ -1,0 +1,535 @@
+Задача № 1
+Реализуйте однонаправленный связный список путем создания класса в Python. При этом в виде методов класса для однонаправленного связного списка реализовать операции:
+Чтение всех элементов.
+Вставка элемента в конец связного списка.
+Вставка элемента в начало связного списка.
+Удаление элемента с конца связного списка.
+Удаление элемента с начала связного списка.
+Поиск элемента в связном списке.
+Вставка элемента после указанного элемента.
+Удаление указанного элемента.
+
+class Node:
+    def __init__(self, v):
+        self.val = v
+        self.next = None
+
+class SLinkedList:
+    def __init__(self):
+        self.head = None
+
+    def show(self):
+        cur = self.head
+        while cur:
+            print(cur.val, end=' -> ' if cur.next else '')
+            cur = cur.next
+        print()
+
+    def append(self, v):
+        new = Node(v)
+        if not self.head:
+            self.head = new
+            return
+        cur = self.head
+        while cur.next:
+            cur = cur.next
+        cur.next = new
+
+    def prepend(self, v):
+        new = Node(v)
+        new.next = self.head
+        self.head = new
+
+    def pop_back(self):
+        if not self.head:
+            return None
+        if not self.head.next:
+            val = self.head.val
+            self.head = None
+            return val
+        cur = self.head
+        while cur.next.next:
+            cur = cur.next
+        val = cur.next.val
+        cur.next = None
+        return val
+
+    def pop_front(self):
+        if not self.head:
+            return None
+        val = self.head.val
+        self.head = self.head.next
+        return val
+
+    def search(self, v):
+        cur = self.head
+        while cur:
+            if cur.val == v:
+                return True
+            cur = cur.next
+        return False
+
+    def insert_after(self, target, v):
+        cur = self.head
+        while cur:
+            if cur.val == target:
+                new = Node(v)
+                new.next = cur.next
+                cur.next = new
+                return
+            cur = cur.next
+        raise ValueError("Элемент не найден")
+
+    def delete(self, v):
+        if not self.head:
+            return
+        if self.head.val == v:
+            self.head = self.head.next
+            return
+        cur = self.head
+        while cur.next:
+            if cur.next.val == v:
+                cur.next = cur.next.next
+                return
+            cur = cur.next
+        raise ValueError("Элемент не найден")
+
+lst = SLinkedList()
+lst.append(10)
+lst.append(20)
+lst.prepend(5)
+lst.show()                       
+print("Удаление с начала:", lst.pop_front())  
+lst.show()                       
+lst.insert_after(10, 15)
+lst.show()                        
+lst.delete(15)
+lst.show()                       
+print("Поиск 20:", lst.search(20)) 
+print("Удаление с конца:", lst.pop_back())   
+lst.show()                   
+
+
+
+
+Задача № 2
+Реализуйте двунаправленный связный список путем создания класса в Python. При этом в виде методов класса для двунаправленного связного списка реализуйте операции:
+Чтение всех элементов.
+Вставка элемента в конец связного списка.
+Удаление элемента с конца связного списка.
+Дополнительно: реализуйте все оставшиеся операции из задачи № 1 для двунаправленного связного списка.
+
+class DNode:
+    def __init__(self, v):
+        self.val = v
+        self.prev = None
+        self.next = None
+
+class DLinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def show(self):
+        cur = self.head
+        while cur:
+            print(cur.val, end=' <-> ' if cur.next else '')
+            cur = cur.next
+        print()
+
+    def append(self, v):
+        new = DNode(v)
+        if not self.head:
+            self.head = self.tail = new
+        else:
+            self.tail.next = new
+            new.prev = self.tail
+            self.tail = new
+
+    def prepend(self, v):
+        new = DNode(v)
+        if not self.head:
+            self.head = self.tail = new
+        else:
+            new.next = self.head
+            self.head.prev = new
+            self.head = new
+
+    def pop_back(self):
+        if not self.tail:
+            return None
+        val = self.tail.val
+        if self.head == self.tail:
+            self.head = self.tail = None
+        else:
+            self.tail = self.tail.prev
+            self.tail.next = None
+        return val
+
+    def pop_front(self):
+        if not self.head:
+            return None
+        val = self.head.val
+        if self.head == self.tail:
+            self.head = self.tail = None
+        else:
+            self.head = self.head.next
+            self.head.prev = None
+        return val
+
+    def search(self, v):
+        cur = self.head
+        while cur:
+            if cur.val == v:
+                return True
+            cur = cur.next
+        return False
+
+    def insert_after(self, target, v):
+        cur = self.head
+        while cur:
+            if cur.val == target:
+                new = DNode(v)
+                new.prev = cur
+                new.next = cur.next
+                if cur.next:
+                    cur.next.prev = new
+                else:
+                    self.tail = new
+                cur.next = new
+                return
+            cur = cur.next
+        raise ValueError("Элемент не найден")
+
+    def delete(self, v):
+        cur = self.head
+        while cur:
+            if cur.val == v:
+                if cur.prev:
+                    cur.prev.next = cur.next
+                else:
+                    self.head = cur.next
+                if cur.next:
+                    cur.next.prev = cur.prev
+                else:
+                    self.tail = cur.prev
+                return
+            cur = cur.next
+        raise ValueError("Элемент не найден")
+
+dll = DLinkedList()
+dll.append(1)
+dll.append(2)
+dll.prepend(0)
+dll.show()                     
+dll.insert_after(1, 1.5)
+dll.show()                      
+print("Удаление с конца:", dll.pop_back())   
+dll.show()                    
+print("Удаление с начала:", dll.pop_front()) 
+dll.show()                      
+print("Поиск 1.5:", dll.search(1.5))  
+dll.delete(1.5)
+dll.show()                     
+
+
+
+Задача № 3
+Реализуйте циклический связный список путем создания класса в Python. При этом в виде методов класса для циклического связного списка реализуйте операции:
+Чтение всех элементов.
+Вставка элемента в конец связного списка.
+Удаление элемента с конца связного списка.
+Дополнительно: реализуйте все другие операции из задачи № 1 для циклического связного списка.
+
+class CNode:
+    def __init__(self, v):
+        self.val = v
+        self.next = None
+
+class CircularLinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def show(self):
+        if not self.head:
+            print("пустой")
+            return
+        cur = self.head
+        while True:
+            print(cur.val, end=' -> ')
+            cur = cur.next
+            if cur == self.head:
+                break
+        print("(цикл)")
+
+    def append(self, v):
+        new = CNode(v)
+        if not self.head:
+            self.head = self.tail = new
+            new.next = new
+        else:
+            new.next = self.head
+            self.tail.next = new
+            self.tail = new
+
+    def prepend(self, v):
+        new = CNode(v)
+        if not self.head:
+            self.head = self.tail = new
+            new.next = new
+        else:
+            new.next = self.head
+            self.tail.next = new
+            self.head = new
+
+    def pop_back(self):
+        if not self.head:
+            return None
+        if self.head == self.tail:
+            val = self.head.val
+            self.head = self.tail = None
+            return val
+        cur = self.head
+        while cur.next != self.tail:
+            cur = cur.next
+        val = self.tail.val
+        cur.next = self.head
+        self.tail = cur
+        return val
+
+    def pop_front(self):
+        if not self.head:
+            return None
+        val = self.head.val
+        if self.head == self.tail:
+            self.head = self.tail = None
+        else:
+            self.head = self.head.next
+            self.tail.next = self.head
+        return val
+
+    def search(self, v):
+        if not self.head:
+            return False
+        cur = self.head
+        while True:
+            if cur.val == v:
+                return True
+            cur = cur.next
+            if cur == self.head:
+                break
+        return False
+
+    def insert_after(self, target, v):
+        if not self.head:
+            raise ValueError("Список пуст")
+        cur = self.head
+        while True:
+            if cur.val == target:
+                new = CNode(v)
+                new.next = cur.next
+                cur.next = new
+                if cur == self.tail:
+                    self.tail = new
+                return
+            cur = cur.next
+            if cur == self.head:
+                break
+        raise ValueError("Элемент не найден")
+
+    def delete(self, v):
+        if not self.head:
+            raise ValueError("Список пуст")
+        if self.head.val == v:
+            self.pop_front()
+            return
+        cur = self.head
+        while cur.next != self.head:
+            if cur.next.val == v:
+                if cur.next == self.tail:
+                    self.tail = cur
+                cur.next = cur.next.next
+                return
+            cur = cur.next
+        raise ValueError("Элемент не найден")
+
+cll = CircularLinkedList()
+cll.append('A')
+cll.append('B')
+cll.append('C')
+cll.show()                      
+cll.prepend('Start')
+cll.show()                      
+print("Удаление с конца:", cll.pop_back())  
+cll.show()                      
+cll.insert_after('A', 'X')
+cll.show()                      
+cll.delete('X')
+cll.show()                      
+print("Поиск B:", cll.search('B'))  
+
+
+
+Задача № 4
+На основе собственного класса реализуйте очередь через связный список. Используя такую очередь решите следующие задачи:
+a. Дан набор из N чисел (N > 10). Создайте очередь, содержащую данные числа в указанном порядке 
+(первое число будет размещаться в начале очереди, последнее – в конце). Извлеките из очереди все элементы и выведите их значения. 
+Выведите также количество извлеченных элементов N.
+b. Даны две очереди. Переместите все элементы первой очереди (в порядке от начала к концу) в конец второй очереди.
+с. Дано число N (> 0) и две непустые очереди. Создайте функцию для перемещения N начальных элементов первой очереди в конец второй очереди. 
+Если первая очередь содержит менее N элементов, то переместите из первой очереди во вторую все элементы.
+
+class Node:
+    def __init__(self, v):
+        self.val = v
+        self.next = None
+
+class Queue:
+    def __init__(self):
+        self.front = None
+        self.rear = None
+        self._size = 0
+
+    def enqueue(self, v):
+        new = Node(v)
+        if not self.rear:
+            self.front = self.rear = new
+        else:
+            self.rear.next = new
+            self.rear = new
+        self._size += 1
+
+    def dequeue(self):
+        if not self.front:
+            return None
+        val = self.front.val
+        self.front = self.front.next
+        if not self.front:
+            self.rear = None
+        self._size -= 1
+        return val
+
+    def is_empty(self):
+        return self._size == 0
+
+    def __len__(self):
+        return self._size
+
+#a
+def task4a(numbers):
+    q = Queue()
+    for x in numbers:
+        q.enqueue(x)
+    extracted = []
+    while not q.is_empty():
+        extracted.append(q.dequeue())
+    print("Извлечённые элементы:", extracted)
+    print("Количество извлечённых элементов:", len(extracted))
+
+#b
+def task4b(q1, q2):
+    while not q1.is_empty():
+        q2.enqueue(q1.dequeue())
+
+#c
+def task4c(n, q1, q2):
+    k = min(n, len(q1))
+    for _ in range(k):
+        q2.enqueue(q1.dequeue())
+
+
+print("4a:")
+task4a([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110])   # N>10
+
+print("\n4b:")
+qa = Queue()
+qb = Queue()
+for i in range(5):
+    qa.enqueue(i)
+task4b(qa, qb)
+print("Очередь qb после перемещения:", end=' ')
+while not qb.is_empty():
+    print(qb.dequeue(), end=' ')
+print()
+
+print("\n4c:")
+qc = Queue()
+qd = Queue()
+for i in range(5, 10):
+    qc.enqueue(i)
+task4c(3, qc, qd)
+print("qc осталось:", end=' ')
+while not qc.is_empty():
+    print(qc.dequeue(), end=' ')
+print("; qd:", end=' ')
+while not qd.is_empty():
+    print(qd.dequeue(), end=' ')
+print()
+
+
+
+Задача № 5*
+Реализуйте систему обработки заявок с одним обработчиком заявок, используя очередь.
+
+import time
+
+class Request:
+    def __init__(self, id):
+        self.id = id
+
+def process(req):
+    time.sleep(0.5)   
+    print(f"Обработана заявка {req.id}")
+
+def single_handler(requests):
+    q = Queue()   # класс Queue из задания 4
+    for r in requests:
+        q.enqueue(r)
+    start = time.time()
+    while not q.is_empty():
+        process(q.dequeue())
+    total = time.time() - start
+    print(f"Общее время обработки: {total:.2f} сек")
+
+requests20 = [Request(i+1) for i in range(20)]
+single_handler(requests20)
+
+
+
+Задача № 6*
+Реализуйте систему обработки заявок с тремя обработчиками заявок. При этом:
+Обработчик № 1 обрабатывает заявку 1,00 сек (используйте модуль time и функцию sleep для имитации того, что обработчик затрачивает на обработку заявки определенное время).
+Обработчик № 2 обрабатывает заявку 1,01 сек.
+Обработчик № 3 обрабатывает заявку 2,00 сек.
+Протестируйте систему на наборе из 20 заявок. Рассчитайте общее время обработки заявок.
+
+
+import time
+
+class Request:
+    def __init__(self, id):
+        self.id = id
+
+class MultiHandler:
+    def __init__(self, times):
+        self.times = times         
+        self.queues = [Queue() for _ in times]  
+
+    def add(self, req, idx):
+        self.queues[idx].enqueue(req)
+
+    def run(self):
+        total = 0
+        for i, q in enumerate(self.queues):
+            while not q.is_empty():
+                req = q.dequeue()
+                print(f"Обработчик {i+1} обрабатывает заявку {req.id}...")
+                time.sleep(self.times[i])
+                total += self.times[i]
+        print(f"Общее время обработки: {total:.2f} сек")
+
+handlers = MultiHandler([1.00, 1.01, 2.00])
+for i in range(1, 21):
+    handlers.add(Request(i), (i-1) % 3)
+handlers.run()
